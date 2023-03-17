@@ -1,0 +1,23 @@
+#!/usr/bin/liquidsoap
+
+# Speech synthesis via say: commands in playlist require text2wave command.
+# This is included in the 'festival' package, so you must first run:
+#   sudo apt update
+#   sudo apt install festival
+
+# Randomized playlist (specified here in relative path notation, so must be in same directory as the one .liq script was started from)
+src = playlist("playlist_with_speech_synth.m3u")
+
+# Non-randomized playlist
+#src = playlist(mode="normal", "my_playlist.m3u")
+
+# Convert mono files to stereo (required for playback on stereo soundcard)
+src = audio_to_stereo(src)
+
+# TODO: Seems to take 10+ seconds to actually play something - possibly PulseAudio to blame?
+
+# Output to local sound card
+output.alsa(
+  mksafe(src)
+)
+
